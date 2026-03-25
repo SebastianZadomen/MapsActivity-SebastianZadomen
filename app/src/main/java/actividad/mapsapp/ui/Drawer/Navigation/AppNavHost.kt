@@ -15,9 +15,9 @@ import androidx.navigation.compose.composable
 fun AppNavHost(navController: NavHostController, supaViewModel: ViewModel) {
     MainScaffold(navController) {
         NavHost(navController = navController, startDestination = Destinations.MapsScreen) {
-            composable<Destinations.MapsScreen> { MapsScreen() }
+            composable<Destinations.MapsScreen> { MapsScreen(supaViewModel as MarcadorViewModel) }
             composable<Destinations.ListScreen> { ListScreen(supaViewModel as MarcadorViewModel) }
-            composable<Destinations.AddMakerScreen> { AddMakerScreen() }
+            composable<Destinations.AddMakerScreen> { AddMakerScreen(supaViewModel as MarcadorViewModel) }
         }
     }
 }

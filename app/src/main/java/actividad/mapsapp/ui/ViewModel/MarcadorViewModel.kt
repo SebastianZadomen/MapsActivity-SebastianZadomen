@@ -26,7 +26,7 @@ class MarcadorViewModel : ViewModel(){
             try {
                 _marcador.value = repository.obtenerMarcadores()
             } catch (e: Exception) {
-                e.printStackTrace()
+                android.util.Log.e("SUPABASE_ERROR", "Error al cargar marcadores: ${e.message}")
             }
         }
     }

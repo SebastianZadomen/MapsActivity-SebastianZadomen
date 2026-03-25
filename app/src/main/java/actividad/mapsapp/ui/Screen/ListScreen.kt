@@ -2,6 +2,8 @@ package actividad.mapsapp.ui.Screen
 
 import actividad.mapsapp.ui.Drawer.SupaBase.Model.Marcadores
 import actividad.mapsapp.ui.ViewModel.MarcadorViewModel
+import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +21,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
@@ -28,22 +32,27 @@ fun ListScreen(spView: MarcadorViewModel = viewModel() ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(listMarcador) { marc: Marcadores ->
             Row(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Card(
                     modifier = Modifier
-
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(10.dp),
+                        elevation = CardDefaults.cardElevation(4.dp)
+
                 ) {
-
-                    Text(
-                        text = marc.Nombre,
-                        modifier = Modifier.weight(1f)
+                    Column(
+                        Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally
                     )
+                    {
+                        Text(
+                            text = marc.Nombre,
+                            modifier = Modifier.padding(20.dp)
+                        )
+                    }
                 }
-
 
             }
         }
