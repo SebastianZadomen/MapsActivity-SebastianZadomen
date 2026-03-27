@@ -16,5 +16,8 @@ data class Marcadores(
     val Latitud: Double,
 
     @SerialName("Description")
-    val Descripcion: String? = null
+    val Descripcion: String? = null,
+
+    @SerialName("ImageUrl")
+    val ImageUrl: String? = null
     )

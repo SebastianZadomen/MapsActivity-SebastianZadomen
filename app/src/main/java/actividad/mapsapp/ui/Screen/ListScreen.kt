@@ -1,7 +1,9 @@
 package actividad.mapsapp.ui.Screen
 
+import actividad.mapsapp.R
 import actividad.mapsapp.ui.Drawer.SupaBase.Model.Marcadores
 import actividad.mapsapp.ui.ViewModel.MarcadorViewModel
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +24,8 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CardDefaults
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 

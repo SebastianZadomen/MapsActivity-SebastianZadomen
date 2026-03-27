@@ -3,12 +3,18 @@ package actividad.mapsapp.ui.ViewModel
 import actividad.mapsapp.ui.Drawer.SupaBase.Model.Marcadores
 import actividad.mapsapp.ui.Drawer.SupaBase.Network.SupabaseClient
 import actividad.mapsapp.ui.Drawer.SupaBase.Repository.MarcadoresRepo
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.github.jan.supabase.postgrest.postgrest
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+
+
 
 class MarcadorViewModel : ViewModel(){
 
@@ -33,10 +39,45 @@ class MarcadorViewModel : ViewModel(){
 
 
 
-    fun añadirMarcador(marcador: Marcadores) {
+    fun añadirMarcador(
+        nombre: String,
+        descripcion: String,
+        latitud: Double,
+        longitud: Double,
+        uriImagen: Uri?,
+        context: Context
+    ) {
         viewModelScope.launch {
-            repository.añadirMarcador(marcador)
-            carregarMarcador()
+            try {
+                var imageUrl: String? = null
+
+                if (uriImagen != null) {
+                    val inputStream = context.contentResolver.openInputStream(uriImagen)
+                    val byteArray = inputStream?.readBytes()
+                    inputStream?.close()
+
+                    if (byteArray != null) {
+                        val fileName = "marcador_${System.currentTimeMillis()}.jpg"
+                        // Subimos la foto al bucket "marcadores_img" (asegúrate de que existe y es público en Supabase)
+                        SupabaseClient.client.storage.from("marcadores_img").upload(fileName, byteArray)
+                        imageUrl = SupabaseClient.client.storage.from("marcadores_img").publicUrl(fileName)
+                    }
+                }
+
+                val nuevoMarcador = Marcadores(
+                    Nombre = nombre,
+                    Longitud = longitud,
+                    Latitud = latitud,
+                    Descripcion = descripcion,
+                    ImageUrl = imageUrl
+                )
+
+                repository.añadirMarcador(nuevoMarcador)
+                carregarMarcador()
+
+            } catch (e: Exception) {
+                Log.e("SUPABASE_ERROR", "Error guardando con imagen: ${e.message}")
+            }
         }
     }
 

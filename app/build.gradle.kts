@@ -83,6 +83,8 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
 
+    implementation("io.coil-kt:coil-compose:2.7.0")
+    implementation("io.github.jan-tennert.supabase:storage-kt:$supabaseVersion")
 
 
 
