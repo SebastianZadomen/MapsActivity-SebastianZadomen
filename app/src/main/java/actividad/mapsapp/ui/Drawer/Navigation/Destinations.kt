@@ -13,4 +13,7 @@ sealed class Destinations (){
 
     object AddMakerScreen : Destinations()
 
+    @Serializable
+    object  DetailScreen : Destinations()
+
 }

@@ -7,9 +7,11 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import actividad.mapsapp.ui.theme.MapsAppTheme
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
+
+
+import androidx.compose.ui.platform.LocalConfiguration
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,10 +19,13 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MapsAppTheme {
+                val configuration = LocalConfiguration.current
+
+                val isTablet = configuration.screenWidthDp > 600
 
                 val supaViewModel : MarcadorViewModel = viewModel()
                 val navController = rememberNavController()
-                AppNavHost(navController = navController, supaViewModel)
+                AppNavHost(navController = navController, supaViewModel, isTablet)
                 }
 
         }

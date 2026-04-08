@@ -6,6 +6,7 @@ import actividad.mapsapp.Core.Permissions.AppPermission
 import actividad.mapsapp.Core.Permissions.PermissionContent
 import actividad.mapsapp.Core.Permissions.PermissionStatus
 import actividad.mapsapp.Core.Permissions.rememberPermissionManager
+import actividad.mapsapp.ui.Drawer.Navigation.Destinations
 import actividad.mapsapp.ui.Drawer.SupaBase.Model.Marcadores
 import actividad.mapsapp.ui.ViewModel.MarcadorViewModel
 import android.annotation.SuppressLint
@@ -19,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -30,12 +32,10 @@ import kotlinx.coroutines.flow.forEach
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun MapsScreen(
-    // Mantenemos tu ViewModel para la base de datos
+    navController: NavController,
     spView: MarcadorViewModel = viewModel(),
-    // Añadimos el ViewModel del profe para controlar los permisos
     permissionViewModel: MapViewModel = viewModel()
 ) {
-    // 1. Lógica de permisos (del profe)
     val permissionManager = rememberPermissionManager(AppPermission.Location)
     val uiState by permissionViewModel.uiState
 
@@ -46,11 +46,8 @@ fun MapsScreen(
         permissionViewModel.onPermissionResult(permissionManager.status)
     }
 
-    // 2. Control de la interfaz (El "portero")
     when (uiState) {
-        // ¡PERMISO CONCEDIDO! Mostramos TU mapa
         MapPermissionState.NavigateToMap -> {
-            // Obtenemos tu lista de marcadores
             val listMarcador by spView.marc.collectAsStateWithLifecycle(initialValue = emptyList<Marcadores>())
 
             Column(Modifier.fillMaxSize()) {
@@ -59,11 +56,9 @@ fun MapsScreen(
                     position = CameraPosition.fromLatLngZoom(itb, 17f)
                 }
 
-                // Propiedad activada para que se vea la bolita azul de tu ubicación (ya que tienes permiso)
                 GoogleMap(
                     modifier = Modifier.fillMaxSize(),
                     cameraPositionState = cameraPositionState,
-                    // properties = MapProperties(isMyLocationEnabled = true), <-- Descomenta esto para ver tu ubicación real
                     onMapClick = {
                         Log.d("MAP CLICKED", it.toString())
                     },
@@ -76,14 +71,18 @@ fun MapsScreen(
 
                         Marker(
                             state = MarkerState(position = position),
-                            title = marcador.Nombre
+                            title = marcador.Nombre,
+                            onClick = {
+                                spView.marcadorSelect = marcador
+                                navController.navigate(Destinations.DetailScreen)
+                                false
+                            }
                         )
                     }
                 }
             }
         }
 
-        // PERMISO DENEGADO (Pantallas del profe)
         MapPermissionState.ShowDenied -> {
             PermissionContent(
                 PermissionStatus.Denied,
@@ -91,7 +90,6 @@ fun MapsScreen(
             )
         }
 
-        // PERMISO DENEGADO PERMANENTEMENTE (Pantallas del profe)
         MapPermissionState.ShowPermanentlyDenied -> {
             PermissionContent(
                 PermissionStatus.PermanentlyDenied,
@@ -99,7 +97,6 @@ fun MapsScreen(
             )
         }
 
-        // SOLICITANDO PERMISO (Pantallas del profe)
         MapPermissionState.Requesting -> {
             PermissionContent(
                 PermissionStatus.Unknown,

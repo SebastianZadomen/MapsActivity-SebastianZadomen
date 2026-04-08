@@ -26,6 +26,7 @@ class MarcadorViewModel : ViewModel(){
         carregarMarcador()
     }
 
+    var marcadorSelect : Marcadores ?= null
 
     private fun carregarMarcador() {
         viewModelScope.launch {

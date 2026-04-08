@@ -2,6 +2,7 @@ package actividad.mapsapp.ui.Drawer.Navigation
 
 import actividad.mapsapp.ui.Drawer.Layout.MainScaffold
 import actividad.mapsapp.ui.Screen.AddMakerScreen
+import actividad.mapsapp.ui.Screen.DetailScreen
 import actividad.mapsapp.ui.Screen.ListScreen
 import actividad.mapsapp.ui.Screen.MapsScreen
 import actividad.mapsapp.ui.ViewModel.MarcadorViewModel
@@ -12,12 +13,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 
 @Composable
-fun AppNavHost(navController: NavHostController, supaViewModel: ViewModel) {
+fun AppNavHost(navController: NavHostController, supaViewModel: ViewModel, isTablet: Boolean) {
     MainScaffold(navController) {
         NavHost(navController = navController, startDestination = Destinations.MapsScreen) {
-            composable<Destinations.MapsScreen> { MapsScreen(supaViewModel as MarcadorViewModel) }
-            composable<Destinations.ListScreen> { ListScreen(supaViewModel as MarcadorViewModel) }
-            composable<Destinations.AddMakerScreen> { AddMakerScreen(supaViewModel as MarcadorViewModel) }
+            composable<Destinations.MapsScreen> { MapsScreen(navController,supaViewModel as MarcadorViewModel) }
+            composable<Destinations.ListScreen> { ListScreen(supaViewModel as MarcadorViewModel, isTablet, navController) }
+            composable<Destinations.AddMakerScreen> { AddMakerScreen(isTablet,supaViewModel as MarcadorViewModel) }
+            composable<Destinations.DetailScreen>{ DetailScreen(supaViewModel as MarcadorViewModel, isTablet) }
         }
     }
 }
