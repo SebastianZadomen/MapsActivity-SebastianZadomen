@@ -1,5 +1,4 @@
 package actividad.mapsapp.ui.Screen
-
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
@@ -32,21 +31,26 @@ import actividad.mapsapp.Core.Permissions.AppPermission
 import actividad.mapsapp.Core.Permissions.PermissionContent
 import actividad.mapsapp.Core.Permissions.PermissionStatus
 import actividad.mapsapp.Core.Permissions.rememberPermissionManager
+// IMPORTANTE: Asegúrate de que esta ruta de FileUtils es correcta en tu proyecto
+import actividad.mapsapp.Core.Utils.FileUtils
+import actividad.mapsapp.ui.Drawer.Navigation.Destinations
 import actividad.mapsapp.ui.Drawer.SupaBase.Model.Marcadores
 import actividad.mapsapp.ui.ViewModel.CreateMarkerViewModel
 import actividad.mapsapp.ui.ViewModel.MarcadorViewModel
-// Importa FileUtils si lo tienes en tu proyecto
-import actividad.mapsapp.Core.Utils.FileUtils
+import androidx.navigation.NavHostController
+
 
 @SuppressLint("MissingPermission")
 @Composable
 fun AddMakerScreen(
+    navController: NavHostController,
+    isTablet : Boolean,
     model: MarcadorViewModel,
-    viewModel: CreateMarkerViewModel = viewModel(),
+    viewModel: CreateMarkerViewModel = viewModel()
+
 ) {
     val context = LocalContext.current
     val permissionManager = rememberPermissionManager(AppPermission.LocationAndCamera)
-
     val uiState by viewModel.uiState
     val imageUri by viewModel.imageUri
     val showDialog by viewModel.showDialog
@@ -103,7 +107,6 @@ fun AddMakerScreen(
                             )
 
                             if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
-                                // Tenemos permiso, preparamos la Uri y lanzamos la cámara
                                 val uri = FileUtils.createImageUri(context)
                                 uri?.let {
                                     viewModel.tempUri = it
@@ -159,7 +162,9 @@ fun AddMakerScreen(
                         )
                     } else {
                         IconButton(
-                            onClick = { viewModel.changeShowDialog(true) },
+                            onClick = { viewModel.changeShowDialog(true)
+
+                            },
                             modifier = Modifier.size(200.dp)
                         ) {
                             Icon(
@@ -186,9 +191,16 @@ fun AddMakerScreen(
                                         uriImagen = imageUri,
                                         context = context
                                     )
+                                    model.marcadorSelect = Marcadores(Nombre = myText,
+                                        Descripcion = descripcion,
+                                        Latitud = location.latitude,
+                                        Longitud = location.longitude,
+                                        ImageUrl = "")
                                     myText = ""
                                     descripcion = ""
                                     viewModel.setImageUri(null)
+                                    navController.navigate(Destinations.MapsScreen)
+
 
                                 } else {
                                     Log.e("GPS", "No se pudo obtener la ubicación")

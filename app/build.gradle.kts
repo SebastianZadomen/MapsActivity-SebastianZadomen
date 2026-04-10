@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     kotlin("plugin.serialization") version "1.9.0"
+
 }
 
 android {
@@ -64,6 +65,7 @@ dependencies {
     implementation(libs.androidx.compose.foundation)
     implementation(libs.androidx.camera.camera2.pipe)
     implementation(libs.androidx.compose.material.core)
+    implementation(libs.androidx.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

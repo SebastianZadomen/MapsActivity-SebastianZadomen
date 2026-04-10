@@ -83,11 +83,15 @@ class MarcadorViewModel : ViewModel(){
     }
 
 
-    fun eliminarMarcador(marcador: Marcadores) {
-        viewModelScope.launch {
-            marcador.id?.let { id ->
+    fun eliminarMarcador(marcador: Marcadores) {viewModelScope.launch {
+        marcador.id?.let { id ->
+            try {
                 repository.eliminarMarcador(id)
                 carregarMarcador()
+            } catch (e: Exception) {
+                carregarMarcador()
+                Log.e("Supabase", "Error al borrar: ${e.message}")
+                }
             }
         }
     }

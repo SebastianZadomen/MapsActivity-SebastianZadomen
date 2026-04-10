@@ -30,6 +30,7 @@ fun MainScaffold(navController: NavController, content: @Composable () -> Unit) 
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
 
     ModalNavigationDrawer(
+        gesturesEnabled = false,
         drawerState = drawerState,
         drawerContent = {
             DrawerMenu(

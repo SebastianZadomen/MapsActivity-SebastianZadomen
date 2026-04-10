@@ -18,7 +18,7 @@ fun AppNavHost(navController: NavHostController, supaViewModel: ViewModel, isTab
         NavHost(navController = navController, startDestination = Destinations.MapsScreen) {
             composable<Destinations.MapsScreen> { MapsScreen(navController,supaViewModel as MarcadorViewModel) }
             composable<Destinations.ListScreen> { ListScreen(supaViewModel as MarcadorViewModel, isTablet, navController) }
-            composable<Destinations.AddMakerScreen> { AddMakerScreen(isTablet,supaViewModel as MarcadorViewModel) }
+            composable<Destinations.AddMakerScreen> { AddMakerScreen(navController,isTablet,supaViewModel as MarcadorViewModel) }
             composable<Destinations.DetailScreen>{ DetailScreen(supaViewModel as MarcadorViewModel, isTablet) }
         }
     }

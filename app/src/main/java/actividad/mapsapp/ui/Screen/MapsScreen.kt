@@ -49,11 +49,20 @@ fun MapsScreen(
     when (uiState) {
         MapPermissionState.NavigateToMap -> {
             val listMarcador by spView.marc.collectAsStateWithLifecycle(initialValue = emptyList<Marcadores>())
+            val lastList = listMarcador.lastOrNull()
 
             Column(Modifier.fillMaxSize()) {
-                val itb = LatLng(41.4534225, 2.1837151)
+                val camaraActual = LatLng(lastList?.Latitud ?: 41.4534225  , lastList?.Longitud ?: 2.1837151)
                 val cameraPositionState = rememberCameraPositionState {
-                    position = CameraPosition.fromLatLngZoom(itb, 17f)
+                    position = CameraPosition.fromLatLngZoom(camaraActual, 17f)
+                }
+                LaunchedEffect(lastList) {
+                    lastList?.let { marcador ->
+                        cameraPositionState.position = CameraPosition.fromLatLngZoom(
+                            LatLng(marcador.Latitud, marcador.Longitud),
+                            17f
+                        )
+                    }
                 }
 
                 GoogleMap(
@@ -70,8 +79,9 @@ fun MapsScreen(
                         val position = LatLng(marcador.Latitud, marcador.Longitud)
 
                         Marker(
-                            state = MarkerState(position = position),
+                            state = MarkerState(position =  position),
                             title = marcador.Nombre,
+                            snippet = marcador.Nombre,
                             onClick = {
                                 spView.marcadorSelect = marcador
                                 navController.navigate(Destinations.DetailScreen)
